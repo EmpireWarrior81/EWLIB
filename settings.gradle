@@ -25,4 +25,3 @@ rootProject.name = 'EWLIB'
 includeBuild('build-logic')
 include('common')
 include('fabric')
-include('neoforge')

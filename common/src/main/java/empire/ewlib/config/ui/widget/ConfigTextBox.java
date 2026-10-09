@@ -21,7 +21,7 @@ public class ConfigTextBox extends EditBox {
     private Predicate<String> validator = s -> true;
 
     public ConfigTextBox(int width, int height) {
-        super(Minecraft.getInstance().font, width, height, Component.empty());
+        super(Minecraft.getInstance().font, 0, 0, width, height, Component.empty());
         this.setMaxLength(Integer.MAX_VALUE);
         this.setResponder(value -> {
             this.updateColor();

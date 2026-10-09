@@ -18,7 +18,7 @@ public class FlatButton extends Button {
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (this.active && this.isHoveredOrFocused()) {
-            graphics.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), 0x77000000);
+            graphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0x77000000);
         }
 
         this.renderString(graphics, Minecraft.getInstance().font, 0xFFFFFF | Mth.ceil(this.alpha * 255.0F) << 24);

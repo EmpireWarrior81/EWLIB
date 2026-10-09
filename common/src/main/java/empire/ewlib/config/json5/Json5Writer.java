@@ -57,44 +57,47 @@ public final class Json5Writer {
         return this.builder.toString();
     }
 
+    // written without pattern-matching switch, since Minecraft 1.20.1 runs on Java 17
     private void value(int depth, @Nullable Object value) {
-        switch (value) {
-            case null -> this.builder.append("null");
-            case Boolean bool -> this.builder.append(bool);
-            case Double d when d.isNaN() -> this.builder.append("NaN");
-            case Double d when d.isInfinite() -> this.builder.append(d > 0 ? "Infinity" : "-Infinity");
-            case Float f when f.isNaN() -> this.builder.append("NaN");
-            case Float f when f.isInfinite() -> this.builder.append(f > 0 ? "Infinity" : "-Infinity");
-            case Number number -> this.builder.append(number);
-            case Enum<?> enumValue -> this.builder.append(quote(enumValue.name()));
-            case Map<?, ?> map -> {
-                if (map.isEmpty()) {
-                    this.builder.append("{}");
-                    return;
-                }
+        if (value == null) {
+            this.builder.append("null");
+        } else if (value instanceof Boolean bool) {
+            this.builder.append(bool);
+        } else if (value instanceof Double d && (d.isNaN() || d.isInfinite())) {
+            this.builder.append(d.isNaN() ? "NaN" : d > 0 ? "Infinity" : "-Infinity");
+        } else if (value instanceof Float f && (f.isNaN() || f.isInfinite())) {
+            this.builder.append(f.isNaN() ? "NaN" : f > 0 ? "Infinity" : "-Infinity");
+        } else if (value instanceof Number number) {
+            this.builder.append(number);
+        } else if (value instanceof Enum<?> enumValue) {
+            this.builder.append(quote(enumValue.name()));
+        } else if (value instanceof Map<?, ?> map) {
+            if (map.isEmpty()) {
+                this.builder.append("{}");
+                return;
+            }
 
-                this.beginObject();
-                int index = 0;
-                for (var entry : map.entrySet()) {
-                    this.entry(depth + 1, null, String.valueOf(entry.getKey()), entry.getValue(), ++index == map.size());
-                }
-                this.endObject(depth);
+            this.beginObject();
+            int index = 0;
+            for (var entry : map.entrySet()) {
+                this.entry(depth + 1, null, String.valueOf(entry.getKey()), entry.getValue(), ++index == map.size());
             }
-            case Collection<?> collection -> {
-                this.builder.append('[');
-                int index = 0;
-                for (var element : collection) {
-                    if (index++ > 0) this.builder.append(", ");
-                    this.value(depth, element);
-                }
-                this.builder.append(']');
+            this.endObject(depth);
+        } else if (value instanceof Collection<?> collection) {
+            this.builder.append('[');
+            int index = 0;
+            for (var element : collection) {
+                if (index++ > 0) this.builder.append(", ");
+                this.value(depth, element);
             }
-            default -> this.builder.append(quote(value.toString()));
+            this.builder.append(']');
+        } else {
+            this.builder.append(quote(value.toString()));
         }
     }
 
     private StringBuilder indent(int depth) {
-        return this.builder.repeat('\t', depth);
+        return this.builder.append("\t".repeat(depth));
     }
 
     public static String quote(String text) {

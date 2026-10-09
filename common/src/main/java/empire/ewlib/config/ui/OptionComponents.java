@@ -154,7 +154,7 @@ public final class OptionComponents {
 
             this.textBox = this.addWidget(new ConfigTextBox(VALUE_WIDTH, CONTROL_HEIGHT));
             this.textBox.setValue(toString.apply(option.value()));
-            this.textBox.moveCursorToStart(false);
+            this.textBox.moveCursorToStart();
             this.textBox.validator(text -> {
                 var parsed = this.parser.apply(text);
                 var constraint = this.option.constraint();
@@ -175,7 +175,7 @@ public final class OptionComponents {
         @SuppressWarnings("unchecked")
         protected void resetToDefault() {
             this.textBox.setValue(this.toString.apply((T) this.option.defaultValue()));
-            this.textBox.moveCursorToStart(false);
+            this.textBox.moveCursorToStart();
         }
 
         @Override
@@ -254,7 +254,7 @@ public final class OptionComponents {
                 }
             } else {
                 this.textBox.setValue(this.formatValue(this.slider.discreteValue()));
-                this.textBox.moveCursorToStart(false);
+                this.textBox.moveCursorToStart();
             }
 
             this.textMode = !this.textMode;
@@ -272,7 +272,7 @@ public final class OptionComponents {
             double defaultValue = ((Number) this.option.defaultValue()).doubleValue();
             this.slider.setDiscreteValue(defaultValue);
             this.textBox.setValue(this.formatValue(defaultValue));
-            this.textBox.moveCursorToStart(false);
+            this.textBox.moveCursorToStart();
             this.onValueChanged();
         }
 

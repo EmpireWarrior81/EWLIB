@@ -4,6 +4,11 @@ plugins {
 }
 repositories {
     maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+        content { includeGroup 'org.parchmentmc.data' }
+    }
+    maven {
         name = 'TerraformersMC'
         url = 'https://maven.terraformersmc.com/releases/'
         content { includeGroup 'com.terraformersmc' }

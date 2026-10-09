@@ -45,7 +45,7 @@ import java.util.function.Predicate;
  */
 public class ConfigScreen extends Screen {
 
-    public static final ResourceLocation SEARCH_ICON = ResourceLocation.fromNamespaceAndPath(EWLib.MOD_ID, "textures/gui/config_search.png");
+    public static final ResourceLocation SEARCH_ICON = new ResourceLocation(EWLib.MOD_ID, "textures/gui/config_search.png");
 
     protected static final int TITLE_HEIGHT = 29;
     protected static final int BOTTOM_BAR_HEIGHT = 30;
@@ -263,7 +263,7 @@ public class ConfigScreen extends Screen {
             for (var widget : component.widgets()) {
                 widget.visible = interactive
                         && component.isWidgetShown(widget)
-                        && widget.getBottom() > this.viewportTop
+                        && widget.getY() + widget.getHeight() > this.viewportTop
                         && widget.getY() < this.viewportBottom;
             }
         }
@@ -314,16 +314,15 @@ public class ConfigScreen extends Screen {
 
         this.layoutEntries();
 
-        // draws the background (see renderBackground below) and then the buttons
+        // 1.20.1 screens draw their own background: vanilla background, then the panel, then the buttons
+        this.renderBackground(graphics);
+        this.renderPanel(graphics, mouseX, mouseY, a);
         super.render(graphics, mouseX, mouseY, a);
 
         this.extractOptionTooltip(graphics, mouseX, mouseY);
     }
 
-    @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float a) {
-        super.renderBackground(graphics, mouseX, mouseY, a);
-
+    protected void renderPanel(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 0xFFFFFFFF);
 
         // the panel: a faint line above and below, a dark translucent body
@@ -453,11 +452,11 @@ public class ConfigScreen extends Screen {
 
         int boxLeft = SIDE_PADDING + 20;
         int indicatorWidth = this.matchIndicator.getString().isEmpty() ? 0 : this.font.width(this.matchIndicator) + 10;
-        int boxRight = this.searchField.getRight() + 3 + indicatorWidth;
+        int boxRight = (this.searchField.getX() + this.searchField.getWidth()) + 3 + indicatorWidth;
         graphics.fillGradient(boxLeft, centerY - 7, boxRight, centerY + 8, 0xC0101010, 0xD0101010);
 
         if (indicatorWidth > 0) {
-            graphics.drawString(this.font, this.matchIndicator, this.searchField.getRight() + 5, centerY - 4, 0xFFFFFFFF, false);
+            graphics.drawString(this.font, this.matchIndicator, (this.searchField.getX() + this.searchField.getWidth()) + 5, centerY - 4, 0xFFFFFFFF, false);
         }
     }
 
@@ -483,7 +482,7 @@ public class ConfigScreen extends Screen {
         }
 
         if (option.backingField().hasAnnotation(RestartRequired.class)) {
-            lines.add(Component.literal("⏻ ").withColor(0xFAEA48)
+            lines.add(Component.literal("⏻ ").withStyle(style -> style.withColor(0xFAEA48))
                     .append(Component.translatable("text.ewlib.config.applies_after_restart").withStyle(ChatFormatting.GRAY))
                     .getVisualOrderText());
         }
@@ -549,13 +548,13 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
         if (this.isInViewport(mouseX, mouseY)) {
             this.scrollBy(-scrollY * SCROLL_STEP);
             return true;
         }
 
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        return super.mouseScrolled(mouseX, mouseY, scrollY);
     }
 
     protected void scrollToMouse(double mouseY) {

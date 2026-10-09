@@ -40,6 +40,7 @@ public class RestartRequiredScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, a);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, this.height / 2 - 16, 0xFFFFFFFF);
     }
