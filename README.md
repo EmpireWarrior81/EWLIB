@@ -2,9 +2,7 @@
 
 Shared library for EmpireWarrior81's mods, for Fabric and NeoForge.
 
-Right now it contains an annotation-driven config system modelled after
-[owo-lib](https://github.com/wisp-forest/owo-lib)'s: same API, same `config/<name>.json5`
-file format (existing owo config files load as-is) and a very similar config screen.
+Modelled after owo-libs design
 
 **This branch targets Minecraft 26.1.2.**
 
@@ -98,4 +96,4 @@ Supported option types: `boolean`, all number types, `String`, enums, `Identifie
 
 ## Credits
 
-The config system's design and the search icon come from owo-lib (MIT), see `THIRD_PARTY_NOTICES.txt`.
+The config system's design and the search icon come from owo-lib (MIT).
