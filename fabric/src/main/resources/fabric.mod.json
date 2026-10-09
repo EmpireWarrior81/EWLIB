@@ -8,6 +8,7 @@
         "${mod_author}"
     ],
     "license": "${license}",
+    "icon": "assets/ewlib/EWLIB_icon.png",
     "environment": "*",
     "entrypoints": {
         "modmenu": [

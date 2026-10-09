@@ -3,8 +3,10 @@ plugins {
     id 'maven-publish'
 }
 
+version = "${mod_version}+${minecraft_version}"
+
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    archivesName = "${mod_id}-${project.name}"
 }
 
 java {
@@ -17,7 +19,6 @@ tasks.withType(Jar).configureEach {
     from(rootProject.file('LICENSE')) {
         rename { "${it}_${mod_name}" }
     }
-    from(rootProject.file('THIRD_PARTY_NOTICES.txt'))
 }
 
 jar {

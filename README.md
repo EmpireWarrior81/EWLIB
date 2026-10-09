@@ -30,14 +30,14 @@ repositories {
 
 dependencies {
     // Fabric (Loom)
-    implementation "empire.empirewarrior:ewlib-fabric-26.1.2:1.0.0"
-    annotationProcessor "empire.empirewarrior:ewlib-fabric-26.1.2:1.0.0"
-    include "empire.empirewarrior:ewlib-fabric-26.1.2:1.0.0"
+    implementation "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.2"
+    annotationProcessor "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.2"
+    include "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.2"
 
     // NeoForge (ModDevGradle)
-    implementation "empire.empirewarrior:ewlib-neoforge-26.1.2:1.0.0"
-    annotationProcessor "empire.empirewarrior:ewlib-neoforge-26.1.2:1.0.0"
-    jarJar "empire.empirewarrior:ewlib-neoforge-26.1.2:1.0.0"
+    implementation "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.2"
+    annotationProcessor "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.2"
+    jarJar "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.2"
 }
 ```
 
