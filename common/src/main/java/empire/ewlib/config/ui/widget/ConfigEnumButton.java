@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
@@ -71,7 +71,7 @@ public class ConfigEnumButton extends Button.Plain {
         var valueName = ConfigTypes.enumValueName(this.selected());
 
         var optionValueKey = this.option.translationKey() + ".value." + valueName;
-        this.setMessage(I18n.exists(optionValueKey)
+        this.setMessage(Language.getInstance().has(optionValueKey)
                 ? Component.translatable(optionValueKey)
                 : Component.translatable("text.config." + this.option.configName() + ".enum." + enumName + "." + valueName));
     }

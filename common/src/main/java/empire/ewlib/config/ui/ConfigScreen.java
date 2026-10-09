@@ -18,6 +18,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
@@ -476,7 +477,7 @@ public class ConfigScreen extends Screen {
         var lines = new ArrayList<FormattedCharSequence>();
 
         var tooltipKey = option.translationKey() + ".tooltip";
-        if (I18n.exists(tooltipKey)) {
+        if (Language.getInstance().has(tooltipKey)) {
             lines.addAll(this.font.split(Component.translatable(tooltipKey), Integer.MAX_VALUE));
         }
 
@@ -631,7 +632,7 @@ public class ConfigScreen extends Screen {
             shouldRestart = true;
         }
 
-        this.minecraft.setScreen(shouldRestart ? new RestartRequiredScreen(this.parent) : this.parent);
+        this.minecraft.gui.setScreen(shouldRestart ? new RestartRequiredScreen(this.parent) : this.parent);
     }
 
     @Override
