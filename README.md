@@ -4,7 +4,7 @@ Shared library for EmpireWarrior81's mods, for Fabric and NeoForge.
 
 Modelled after owo-libs design
 
-**This branch targets Minecraft 26.1.2.**
+**This branch targets Minecraft 26.1.1.**
 
 ## Project layout
 
@@ -30,14 +30,14 @@ repositories {
 
 dependencies {
     // Fabric (Loom)
-    implementation "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.2"
-    annotationProcessor "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.2"
-    include "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.2"
+    implementation "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.1"
+    annotationProcessor "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.1"
+    include "empire.empirewarrior:ewlib-fabric:0.1.0+26.1.1"
 
     // NeoForge (ModDevGradle)
-    implementation "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.2"
-    annotationProcessor "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.2"
-    jarJar "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.2"
+    implementation "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.1"
+    annotationProcessor "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.1"
+    jarJar "empire.empirewarrior:ewlib-neoforge:0.1.0+26.1.1"
 }
 ```
 
