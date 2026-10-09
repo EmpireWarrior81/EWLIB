@@ -24,7 +24,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -567,7 +567,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_F && event.hasControlDown() && this.searchField != null) {
+        if (event.key() == InputConstants.KEY_F && event.hasControlDown() && this.searchField != null) {
             this.setFocused(this.searchField);
             return true;
         }

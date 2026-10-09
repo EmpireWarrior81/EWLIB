@@ -9,7 +9,7 @@ import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 /**
  * A button cycling through the values of an enum option:
@@ -32,13 +32,13 @@ public class ConfigEnumButton extends Button.Plain {
 
     @Override
     public void onClick(MouseButtonEvent event, boolean doubleClick) {
-        this.wasRightClicked = event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+        this.wasRightClicked = event.button() == InputConstants.MOUSE_BUTTON_RIGHT;
         super.onClick(event, doubleClick);
     }
 
     @Override
     protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
-        return buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT || super.isValidClickButton(buttonInfo);
+        return buttonInfo.button() == InputConstants.MOUSE_BUTTON_RIGHT || super.isValidClickButton(buttonInfo);
     }
 
     @Override
