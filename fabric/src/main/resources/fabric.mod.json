@@ -1,0 +1,29 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "license": "${license}",
+    "environment": "*",
+    "entrypoints": {
+        "modmenu": [
+            "empire.ewlib.fabric.EWLibModMenu"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=${fabric_loader_version}",
+        "minecraft": "~${minecraft_version}",
+        "java": ">=${java_version}"
+    },
+    "custom": {
+        "modmenu": {
+            "badges": [
+                "library"
+            ]
+        }
+    }
+}

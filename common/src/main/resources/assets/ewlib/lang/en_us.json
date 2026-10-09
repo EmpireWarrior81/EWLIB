@@ -1,0 +1,17 @@
+{
+  "text.ewlib.config.search": "Search...",
+  "text.ewlib.config.search.matches": "%d of %d",
+  "text.ewlib.config.search.no_matches": "No matches",
+  "text.ewlib.config.must_restart": "Some changes you made require a restart to apply",
+  "text.ewlib.config.button.reload": "Reload",
+  "text.ewlib.config.button.done": "Done",
+  "text.ewlib.config.button.exit_minecraft": "Exit Minecraft",
+  "text.ewlib.config.button.ignore_restart": "Restart later",
+  "text.ewlib.config.button.range.edit_as_text": "Edit as text",
+  "text.ewlib.config.button.range.edit_with_slider": "Edit with slider",
+  "text.ewlib.config.applies_after_restart": "This option applies after a restart",
+  "text.ewlib.config.sections": "Sections",
+  "text.ewlib.config.sections_tooltip": "Sections",
+  "text.ewlib.config.boolean_toggle.enabled": "Enabled",
+  "text.ewlib.config.boolean_toggle.disabled": "Disabled"
+}
