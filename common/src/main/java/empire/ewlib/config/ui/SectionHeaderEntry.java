@@ -2,7 +2,7 @@ package empire.ewlib.config.ui;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
@@ -56,7 +56,7 @@ public class SectionHeaderEntry implements ConfigEntry {
     }
 
     @Override
-    public void extract(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void extract(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         var font = Minecraft.getInstance().font;
 
         int lineWidth = (int) (this.width * .35f);
@@ -67,7 +67,7 @@ public class SectionHeaderEntry implements ConfigEntry {
         int centerY = this.y + TOP_MARGIN + HEIGHT / 2;
 
         ConfigRendering.horizontalGradient(graphics, left, centerY - 1, left + lineWidth, centerY + 1, 0x00000000, 0xFFFFFFFF);
-        graphics.text(font, this.styledTitle, left + lineWidth + 5, centerY - 4, 0xFFFFFFFF, true);
+        graphics.drawString(font, this.styledTitle, left + lineWidth + 5, centerY - 4, 0xFFFFFFFF, true);
         int rightLine = left + lineWidth + 5 + labelWidth + 5;
         ConfigRendering.horizontalGradient(graphics, rightLine, centerY - 1, rightLine + lineWidth, centerY + 1, 0xFFFFFFFF, 0x00000000);
     }

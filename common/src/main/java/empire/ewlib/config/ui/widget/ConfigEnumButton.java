@@ -3,9 +3,7 @@ package empire.ewlib.config.ui.widget;
 import empire.ewlib.config.ConfigTypes;
 import empire.ewlib.config.Option;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.input.InputWithModifiers;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.input.MouseButtonInfo;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +13,7 @@ import org.lwjgl.glfw.GLFW;
  * A button cycling through the values of an enum option:
  * left click goes forward, right click goes back
  */
-public class ConfigEnumButton extends Button.Plain {
+public class ConfigEnumButton extends Button {
 
     protected final Option<?> option;
     protected final Enum<?>[] values;
@@ -31,19 +29,19 @@ public class ConfigEnumButton extends Button.Plain {
     }
 
     @Override
-    public void onClick(MouseButtonEvent event, boolean doubleClick) {
-        this.wasRightClicked = event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT;
-        super.onClick(event, doubleClick);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.wasRightClicked = button == GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
-        return buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT || super.isValidClickButton(buttonInfo);
+    protected boolean isValidClickButton(int button) {
+        return button == GLFW.GLFW_MOUSE_BUTTON_RIGHT || super.isValidClickButton(button);
     }
 
     @Override
-    public void onPress(InputWithModifiers input) {
-        int step = this.wasRightClicked || input.hasShiftDown() ? -1 : 1;
+    public void onPress() {
+        int step = this.wasRightClicked || Screen.hasShiftDown() ? -1 : 1;
         this.selectedIndex = Math.floorMod(this.selectedIndex + step, this.values.length);
         this.wasRightClicked = false;
 

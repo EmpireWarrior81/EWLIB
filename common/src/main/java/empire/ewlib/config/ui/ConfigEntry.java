@@ -1,6 +1,6 @@
 package empire.ewlib.config.ui;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface ConfigEntry {
 
     int width();
 
-    void extract(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a);
+    void extract(GuiGraphics graphics, int mouseX, int mouseY, float a);
 
     /**
      * @return The vanilla widgets of this entry, which receive input through the screen

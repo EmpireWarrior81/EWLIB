@@ -3,7 +3,7 @@ package empire.ewlib.config.ui;
 import empire.ewlib.config.ConfigTypes;
 import empire.ewlib.config.Option;
 import empire.ewlib.config.annotation.RangeConstraint;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Creates the row for a config option in the {@link ConfigScreen}
@@ -28,7 +28,7 @@ public interface OptionComponentFactory<T> {
 
     OptionComponentFactory<String> STRING = option -> new OptionComponents.TextBox<>(option, s -> s, s -> s);
 
-    OptionComponentFactory<Identifier> IDENTIFIER = option -> new OptionComponents.TextBox<>(option, Identifier::toString, Identifier::tryParse);
+    OptionComponentFactory<ResourceLocation> IDENTIFIER = option -> new OptionComponents.TextBox<>(option, ResourceLocation::toString, ResourceLocation::tryParse);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     OptionComponentFactory<? extends Enum<?>> ENUM = option -> new OptionComponents.EnumCycle((Option) option);

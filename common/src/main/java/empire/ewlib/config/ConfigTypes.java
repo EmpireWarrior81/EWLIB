@@ -1,6 +1,6 @@
 package empire.ewlib.config;
 
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
@@ -74,7 +74,7 @@ public final class ConfigTypes {
 
         if (!(type instanceof Class<?> clazz)) return false;
         return clazz == boolean.class || clazz == Boolean.class || clazz == String.class
-                || clazz.isEnum() || clazz == Identifier.class || isNumberType(clazz);
+                || clazz.isEnum() || clazz == ResourceLocation.class || isNumberType(clazz);
     }
 
     /**
@@ -112,8 +112,8 @@ public final class ConfigTypes {
 
         if (clazz == String.class) return value.toString();
 
-        if (clazz == Identifier.class) {
-            var identifier = Identifier.tryParse(value.toString());
+        if (clazz == ResourceLocation.class) {
+            var identifier = ResourceLocation.tryParse(value.toString());
             if (identifier == null) throw new IllegalArgumentException("Invalid identifier " + value);
             return identifier;
         }
@@ -139,7 +139,7 @@ public final class ConfigTypes {
             return list;
         }
 
-        if (value instanceof Identifier identifier) return identifier.toString();
+        if (value instanceof ResourceLocation identifier) return identifier.toString();
         return value;
     }
 

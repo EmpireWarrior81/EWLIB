@@ -2,13 +2,12 @@ package empire.ewlib.config.ui.widget;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 /**
  * An on/off button showing {@code [✔] Enabled} or {@code [❌] Disabled}
  */
-public class ConfigToggleButton extends Button.Plain {
+public class ConfigToggleButton extends Button {
 
     protected static final Component ENABLED_MESSAGE = Component.empty()
             .append(Component.literal("[").withStyle(ChatFormatting.GRAY))
@@ -33,7 +32,7 @@ public class ConfigToggleButton extends Button.Plain {
     }
 
     @Override
-    public void onPress(InputWithModifiers input) {
+    public void onPress() {
         this.enabled(!this.enabled);
         this.onToggle.run();
     }

@@ -1,6 +1,6 @@
 package empire.ewlib.config.ui;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -39,9 +39,9 @@ public class RestartRequiredScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        graphics.centeredText(this.font, this.title, this.width / 2, this.height / 2 - 16, 0xFFFFFFFF);
-        super.extractRenderState(graphics, mouseX, mouseY, a);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+        super.render(graphics, mouseX, mouseY, a);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, this.height / 2 - 16, 0xFFFFFFFF);
     }
 
     @Override

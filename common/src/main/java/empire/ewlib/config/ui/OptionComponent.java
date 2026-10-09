@@ -3,7 +3,7 @@ package empire.ewlib.config.ui;
 import empire.ewlib.config.Option;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.locale.Language;
@@ -114,7 +114,7 @@ public abstract class OptionComponent implements ConfigEntry {
     }
 
     @Override
-    public void extract(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void extract(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         int nameX = this.x + PADDING;
         int controlsLeft = this.x + this.width;
         for (var widget : this.widgets) {
@@ -127,10 +127,10 @@ public abstract class OptionComponent implements ConfigEntry {
                 : Language.getInstance().getVisualOrder(FormattedText.composite(
                         this.font.substrByWidth(this.name, controlsLeft - 4 - nameX - this.font.width("...")),
                         FormattedText.of("...")));
-        graphics.text(this.font, name, nameX, this.y + (HEIGHT - this.font.lineHeight) / 2 + 1, 0xFFFFFFFF, true);
+        graphics.drawString(this.font, name, nameX, this.y + (HEIGHT - this.font.lineHeight) / 2 + 1, 0xFFFFFFFF, true);
 
         for (var widget : this.widgets) {
-            if (widget.visible) widget.extractRenderState(graphics, mouseX, mouseY, a);
+            if (widget.visible) widget.render(graphics, mouseX, mouseY, a);
         }
     }
 

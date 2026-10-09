@@ -1,6 +1,5 @@
 package empire.ewlib.config.ui;
 
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import empire.ewlib.EWLib;
 import empire.ewlib.config.ConfigTypes;
 import empire.ewlib.config.ConfigWrapper;
@@ -9,17 +8,16 @@ import empire.ewlib.config.annotation.ExcludeFromScreen;
 import empire.ewlib.config.annotation.RestartRequired;
 import empire.ewlib.config.annotation.SectionHeader;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +45,7 @@ import java.util.function.Predicate;
  */
 public class ConfigScreen extends Screen {
 
-    public static final Identifier SEARCH_ICON = Identifier.fromNamespaceAndPath(EWLib.MOD_ID, "textures/gui/config_search.png");
+    public static final ResourceLocation SEARCH_ICON = ResourceLocation.fromNamespaceAndPath(EWLib.MOD_ID, "textures/gui/config_search.png");
 
     protected static final int TITLE_HEIGHT = 29;
     protected static final int BOTTOM_BAR_HEIGHT = 30;
@@ -306,7 +304,7 @@ public class ConfigScreen extends Screen {
     // -------------
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         long now = System.nanoTime();
         float ticks = (now - this.lastFrameTime) / 50_000_000f;
         this.lastFrameTime = now;
@@ -316,25 +314,31 @@ public class ConfigScreen extends Screen {
 
         this.layoutEntries();
 
-        graphics.centeredText(this.font, this.title, this.width / 2, 10, 0xFFFFFFFF);
+        // draws the background (see renderBackground below) and then the buttons
+        super.render(graphics, mouseX, mouseY, a);
+
+        this.extractOptionTooltip(graphics, mouseX, mouseY);
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+        super.renderBackground(graphics, mouseX, mouseY, a);
+
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 0xFFFFFFFF);
 
         // the panel: a faint line above and below, a dark translucent body
-        graphics.horizontalLine(0, this.width - 1, this.panelTop - 1, 0x33FFFFFF);
-        graphics.horizontalLine(0, this.width - 1, this.panelBottom, 0x33FFFFFF);
+        graphics.hLine(0, this.width - 1, this.panelTop - 1, 0x33FFFFFF);
+        graphics.hLine(0, this.width - 1, this.panelBottom, 0x33FFFFFF);
         graphics.fill(0, this.panelTop, this.width, this.panelBottom, 0x77000000);
-        graphics.outline(0, this.panelTop, this.width, this.panelBottom - this.panelTop, 0x99121212);
+        graphics.renderOutline(0, this.panelTop, this.width, this.panelBottom - this.panelTop, 0x99121212);
 
         this.extractEntries(graphics, mouseX, mouseY, a);
         this.extractScrollbar(graphics, mouseX, mouseY);
         this.extractSidebar(graphics, mouseX, mouseY);
         this.extractSearchBar(graphics);
-
-        super.extractRenderState(graphics, mouseX, mouseY, a);
-
-        this.extractOptionTooltip(graphics, mouseX, mouseY);
     }
 
-    protected void extractEntries(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    protected void extractEntries(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         if (this.entries == null) return;
 
         // widgets outside the panel must not look hovered
@@ -351,7 +355,7 @@ public class ConfigScreen extends Screen {
         graphics.disableScissor();
     }
 
-    protected void extractSearchHighlight(GuiGraphicsExtractor graphics, ConfigEntry entry) {
+    protected void extractSearchHighlight(GuiGraphics graphics, ConfigEntry entry) {
         float age = (System.currentTimeMillis() - this.highlightStartTime) / (float) HIGHLIGHT_MILLIS;
         if (age > 1) {
             this.highlightedEntry = null;
@@ -366,7 +370,7 @@ public class ConfigScreen extends Screen {
         ConfigRendering.horizontalGradient(graphics, baseX, entry.y(), baseX + segmentWidth, entry.y() + entry.height(), mainColor, mainColor & 0x00FFFFFF);
     }
 
-    protected void extractScrollbar(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    protected void extractScrollbar(GuiGraphics graphics, int mouseX, int mouseY) {
         int maxScroll = this.maxScroll();
         if (maxScroll <= 0) return;
 
@@ -386,14 +390,13 @@ public class ConfigScreen extends Screen {
         graphics.fill(this.viewportRight - SCROLLBAR_WIDTH, barY, this.viewportRight, barY + barHeight, alpha << 24);
     }
 
-    protected void extractSidebar(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    protected void extractSidebar(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.sections.isEmpty()) return;
 
         var toggle = Component.literal(this.sidebarOpen ? ">" : "<").withStyle(ChatFormatting.BOLD);
-        graphics.text(this.font, toggle, this.containerRight - 2 - this.font.width(toggle), (this.panelTop + this.panelBottom) / 2 - 4, 0xFFFFFFFF, true);
+        graphics.drawString(this.font, toggle, this.containerRight - 2 - this.font.width(toggle), (this.panelTop + this.panelBottom) / 2 - 4, 0xFFFFFFFF, true);
         if (this.isOnSidebarToggle(mouseX, mouseY)) {
-            graphics.requestCursor(CursorTypes.POINTING_HAND);
-            graphics.setTooltipForNextFrame(this.font, Component.translatable("text.ewlib.config.sections_tooltip"), mouseX, mouseY);
+            this.setTooltipForNextRenderPass(Component.translatable("text.ewlib.config.sections_tooltip"));
         }
 
         int sidebarWidth = this.sidebarWidth();
@@ -404,7 +407,7 @@ public class ConfigScreen extends Screen {
         graphics.enableScissor(left, this.panelTop, left + sidebarWidth, this.panelBottom);
 
         var heading = Component.translatable("text.ewlib.config.sections").withStyle(ChatFormatting.UNDERLINE);
-        graphics.text(this.font, heading, center - this.font.width(heading) / 2, this.panelTop + 15, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, heading, center - this.font.width(heading) / 2, this.panelTop + 15, 0xFFFFFFFF, false);
 
         int labelY = this.sectionLabelsTop();
         for (var section : this.sections) {
@@ -413,8 +416,7 @@ public class ConfigScreen extends Screen {
                     && mouseY >= labelY && mouseY < labelY + 13 && mouseX >= left && mouseX < left + sidebarWidth;
 
             var text = hovered ? section.title().copy().withStyle(ChatFormatting.YELLOW) : section.title();
-            graphics.text(this.font, text, center - labelWidth / 2, labelY + 2, 0xFFFFFFFF, false);
-            if (hovered) graphics.requestCursor(CursorTypes.POINTING_HAND);
+            graphics.drawString(this.font, text, center - labelWidth / 2, labelY + 2, 0xFFFFFFFF, false);
 
             labelY += 13;
         }
@@ -443,11 +445,11 @@ public class ConfigScreen extends Screen {
         return null;
     }
 
-    protected void extractSearchBar(GuiGraphicsExtractor graphics) {
+    protected void extractSearchBar(GuiGraphics graphics) {
         if (this.searchField == null) return;
 
         int centerY = this.height - BOTTOM_BAR_HEIGHT / 2;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, SEARCH_ICON, SIDE_PADDING + 2, centerY - 8, 0, 0, 16, 16, 16, 16);
+        graphics.blit(SEARCH_ICON, SIDE_PADDING + 2, centerY - 8, 0, 0, 16, 16, 16, 16);
 
         int boxLeft = SIDE_PADDING + 20;
         int indicatorWidth = this.matchIndicator.getString().isEmpty() ? 0 : this.font.width(this.matchIndicator) + 10;
@@ -455,11 +457,11 @@ public class ConfigScreen extends Screen {
         graphics.fillGradient(boxLeft, centerY - 7, boxRight, centerY + 8, 0xC0101010, 0xD0101010);
 
         if (indicatorWidth > 0) {
-            graphics.text(this.font, this.matchIndicator, this.searchField.getRight() + 5, centerY - 4, 0xFFFFFFFF, false);
+            graphics.drawString(this.font, this.matchIndicator, this.searchField.getRight() + 5, centerY - 4, 0xFFFFFFFF, false);
         }
     }
 
-    protected void extractOptionTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    protected void extractOptionTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (!this.isInViewport(mouseX, mouseY) || this.isInScrollbar(mouseX, mouseY)) return;
 
         for (var component : this.optionComponents.values()) {
@@ -467,7 +469,7 @@ public class ConfigScreen extends Screen {
             if (mouseY < component.y() || mouseY >= component.y() + component.height()) continue;
 
             var lines = this.tooltipFor(component.option());
-            if (!lines.isEmpty()) graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
+            if (!lines.isEmpty()) this.setTooltipForNextRenderPass(lines);
             return;
         }
     }
@@ -494,10 +496,10 @@ public class ConfigScreen extends Screen {
     // -------------
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.layoutEntries();
 
-        if (this.isOnSidebarToggle(event.x(), event.y())) {
+        if (this.isOnSidebarToggle(mouseX, mouseY)) {
             long elapsed = Math.min(System.currentTimeMillis() - this.sidebarToggleTime, SIDEBAR_ANIMATION_MILLIS);
             // reverse a running animation from where it currently is
             this.sidebarToggleTime = System.currentTimeMillis() - (SIDEBAR_ANIMATION_MILLIS - elapsed);
@@ -506,44 +508,44 @@ public class ConfigScreen extends Screen {
             return true;
         }
 
-        var section = this.sectionLabelAt(event.x(), event.y());
+        var section = this.sectionLabelAt(mouseX, mouseY);
         if (section != null) {
             this.scrollTo(section);
             this.playClickSound();
             return true;
         }
 
-        if (this.isInScrollbar(event.x(), event.y())) {
+        if (this.isInScrollbar(mouseX, mouseY)) {
             this.draggingScrollbar = true;
-            this.scrollToMouse(event.y());
+            this.scrollToMouse(mouseY);
             return true;
         }
 
-        if (this.isInViewport(event.x(), event.y())) return super.mouseClicked(event, doubleClick);
+        if (this.isInViewport(mouseX, mouseY)) return super.mouseClicked(mouseX, mouseY, button);
 
         // clicks outside the panel must not reach rows that are scrolled out of view
         this.updateWidgetVisibility(false);
         try {
-            return super.mouseClicked(event, doubleClick);
+            return super.mouseClicked(mouseX, mouseY, button);
         } finally {
             this.updateWidgetVisibility(true);
         }
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dx, double dy) {
         if (this.draggingScrollbar) {
-            this.scrollToMouse(event.y());
+            this.scrollToMouse(mouseY);
             return true;
         }
 
-        return super.mouseDragged(event, dx, dy);
+        return super.mouseDragged(mouseX, mouseY, button, dx, dy);
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent event) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.draggingScrollbar = false;
-        return super.mouseReleased(event);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -565,18 +567,18 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_F && event.hasControlDown() && this.searchField != null) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_F && Screen.hasControlDown() && this.searchField != null) {
             this.setFocused(this.searchField);
             return true;
         }
 
-        if (this.searchField != null && this.getFocused() == this.searchField && event.isConfirmation()) {
+        if (this.searchField != null && this.getFocused() == this.searchField && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
             this.search();
             return true;
         }
 
-        return super.keyPressed(event);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     protected void search() {
@@ -614,7 +616,7 @@ public class ConfigScreen extends Screen {
     }
 
     protected void playClickSound() {
-        AbstractWidget.playButtonClickSound(this.minecraft.getSoundManager());
+        this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     // -------------
@@ -651,7 +653,7 @@ public class ConfigScreen extends Screen {
         DEFAULT_FACTORIES.put(option -> ConfigTypes.isNumberType(option.clazz()), OptionComponentFactory.NUMBER);
         DEFAULT_FACTORIES.put(option -> option.clazz() == String.class, OptionComponentFactory.STRING);
         DEFAULT_FACTORIES.put(option -> option.clazz() == Boolean.class || option.clazz() == boolean.class, OptionComponentFactory.BOOLEAN);
-        DEFAULT_FACTORIES.put(option -> option.clazz() == Identifier.class, OptionComponentFactory.IDENTIFIER);
+        DEFAULT_FACTORIES.put(option -> option.clazz() == ResourceLocation.class, OptionComponentFactory.IDENTIFIER);
         DEFAULT_FACTORIES.put(option -> option.clazz().isEnum(), OptionComponentFactory.ENUM);
     }
 }

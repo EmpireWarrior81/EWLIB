@@ -16,7 +16,7 @@ public class NeoForgePlatform implements Platform {
 
     @Override
     public boolean isClient() {
-        return FMLEnvironment.getDist() == Dist.CLIENT;
+        return FMLEnvironment.dist == Dist.CLIENT;
     }
 
     @Override

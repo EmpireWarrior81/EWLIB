@@ -1,6 +1,6 @@
 package empire.ewlib.config.ui;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 
 /**
  * Drawing helpers the vanilla GUI does not provide
@@ -12,7 +12,7 @@ public final class ConfigRendering {
     /**
      * Fill a rectangle with a gradient running from {@code leftColor} to {@code rightColor}
      */
-    public static void horizontalGradient(GuiGraphicsExtractor graphics, int x0, int y0, int x1, int y1, int leftColor, int rightColor) {
+    public static void horizontalGradient(GuiGraphics graphics, int x0, int y0, int x1, int y1, int leftColor, int rightColor) {
         int width = x1 - x0;
         if (width <= 0) return;
 
